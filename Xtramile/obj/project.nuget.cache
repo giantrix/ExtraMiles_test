@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "CXUrJ5o/g29ZVyJEcsQPoJii3JliGgbqR6cEhz/ZTcA2+jfSANS2te92/hGD2TB5j/IfxsdELHlR2UsJSkh1vA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Bryant\\source\\repos\\Xtramile-Test\\Xtramile\\Xtramile.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Bryant\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,90 @@
+﻿@model List<CountryModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <div class="search-div">
+            <div>
+                <label class="lblName">Country</label>
+                @Html.DropDownList("ddlCountry", new SelectList(Model.Select(x => new { Value = x.Code, Text = x.Name }), "Value", "Text"), "--Select Country--", new { @required = "required" })
+            </div>
+            <div>
+                <label class="lblName">City</label>
+                @Html.DropDownList("ddlCity", new SelectList(Model.Select(x => new { Value = x.Code, Text = x.Name }), "Value", "Text"), "--Select City--", new { @required = "required" })
+            </div>
+        </div>
+    </div>
+    <div class="result-div">
+        <div>Result</div>
+        <div class="result-content">
+
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .lblName {
+        width: 100px;
+    }
+
+    .search-div {
+        text-align: left;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function temperatureConverter(valNum) {
+        valNum = parseFloat(valNum);
+        document.getElementById("outputCelsius").innerHTML = (valNum - 32) / 1.8;
+    }
+    $(document).ready(function () {
+        $("#ddlCountry").change(function () {
+            var dID = $(this).val();
+            $.getJSON("../Home/LoadCitiesByCountry", { countryCode: dID },
+                function (data) {
+                    var select = $("#ddlCity");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: 0,
+                        text: "Select a City"
+                    }));
+                    $.each(data, function (index, itemData) {
+                        select.append($('<option/>', {
+                            value: itemData.id,
+                            text: itemData.city
+                        }));
+                    });
+                });
+        });
+
+
+        $("#ddlCity").change(function () {
+
+            var dID = $("#ddlCity option:selected").text();
+            $.getJSON("../Home/LoadCitiesDetail", { cityName: dID },
+                function (data) {
+                    var select = $(".result-content");
+                    select.empty();
+                    select.append('<div><label class="lblResult">Location</label><label class="lblResults">' + data.coord.lon + '-' + data.coord.lon + '</label></div>');
+                    select.append('<div><label class="lblResult">Time</label><label class="lblResults">' + data.timezone + '-' + data.coord.lon + '</label></div>');
+                    select.append('<div><label class="lblResult">Wind</label><label class="lblResults">speed: ' + data.wind.speed + '- deg: ' + data.wind.deg + '</label></div>');
+                    select.append('<div><label class="lblResult">Visibility</label><label class="lblResults">' + data.visibility + '</label></div>');
+                    select.append('<div><label class="lblResult">Sky conditions</label><label class="lblResults">' + data.weather[0].description + '</label></div>');
+                    select.append('<div><label class="lblResult">Temperature (in Fahrenheit)</label><label class="lblResults">' + data.main.temp + '</label></div>');
+                    select.append('<div><label class="lblResult">Temperature (in Celsius)</label><label class="lblResults" id="outputCelsius"></label></div>');
+                    select.append('<div><label class="lblResult">Relative Humidity</label><label class="lblResults">' + data.main.humidity + '</label></div>');
+                    select.append('<div><label class="lblResult">Pressure</label><label class="lblResults">' + data.main.pressure + '</label></div>');
+
+                    temperatureConverter(data.main.temp);
+                });
+        });
+        
+    });
+
+</script>
+
